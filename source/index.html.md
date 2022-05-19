@@ -6,10 +6,6 @@ language_tabs: # must be one of https://git.io/vQNgJ
   - python
   - javascript
 
-toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a>
-
 includes:
   - errors
 
@@ -19,26 +15,17 @@ code_clipboard: true
 
 meta:
   - name: description
-    content: Documentation for the Kittn API
+    content: CuraDeuda API
 ---
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Welcome to the CuraDeuda API documentation. Our goal is to provide a simple, easy to use API for vendors, who want to integrate their products with CuraDeuda.
 
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
-
-This example API documentation page was created with [Slate](https://github.com/slatedocs/slate). Feel free to edit it and use it as a base for your own API's documentation.
-
+This API allow you to create leads in CuraDeuda database.
 # Authentication
 
-> Para poder crear usuarios necesitas un Bearer Token y mandarlo en el header
-
-<!-- ```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-``` -->
+> To create users you need a Bearer Token and send it in the headers.
 
 ```python
 import requests
@@ -63,23 +50,20 @@ const headers = {
 ```
 
 
-> Asegurate de reemplazar <YOUR_TOKEN> con el token que se te brindo.
+> Ensure that you replace <YOUR_TOKEN> with the token that was provided to you.
 
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
+CuraDeuda API uses Bearer Tokens to allow vendors to use the API. Please contact us for a token.
 
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
+`Authorization: Bearer YOUR_TOKEN`
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+You must replace <code>YOUR_TOKEN</code> with your personal API key.
 </aside>
 
 
 # Leads
 
-## Crear un Lead nuevo
-
+## Create a Lead
 
 ```python
 import requests
@@ -94,7 +78,12 @@ lead = {
     "first_lastname":"Perez",
     "second_lastname":"Perez",
     "email":"juan@mail.com",
-    "phone":"123456789"
+    "phone":"123456789",
+    "rfc":"XXXX900101",
+    "city":"Guadalajara",
+    "suburb":"Centro",
+    "street":"Street 1",
+    "cp":"12345",
   },
   "tags":{
     "qb_fuente":1,
@@ -112,7 +101,8 @@ curl "https://api.app.curadeuda.com/api/users" \
   -H "Authorization: Bearer <YOUR_TOKEN>" \
   -H "Content-Type: application/json" \
   -d '{"users": {"name": "Juan", "first_lastname": "Perez", "second_lastname": "Perez", \
-  "email": "juan@mail.com", "phone": "123456789"}, "tags": {"qb_fuente": 1, "qb_campaign": 1}}'
+  "email": "juan@mail.com", "phone": "123456789", "rfc": "XXXX900101", "city": "Guadalajara", \
+  "suburb": "Centro", "street": "Street 1", "cp": "12345" }, "tags": {"qb_fuente": 1, "qb_campaign": 1 }}'
 ```
 
 ```javascript
@@ -125,7 +115,12 @@ let lead = {
     "first_lastname":"Perez",
     "second_lastname":"Perez",
     "email":"juan@mail.com",
-    "phone":"123456789"
+    "phone":"123456789",
+    "rfc":"XXXX900101",
+    "city":"Guadalajara",
+    "suburb":"Centro",
+    "street":"Street 1",
+    "cp":"12345"
   },
   "tags":{
     "qb_fuente":1,
@@ -140,23 +135,8 @@ response = await fetch('https://api.app.curadeuda.com/api/users', {
 })
 
 ```
-Este Endpoint devuelve un código 201 cuando se crea un nuevo Lead.
 
-### HTTP Request
-
-`POST https://api.app.curadeuda.com/api/users`
-
-### JSON Values User
-
-Values | Type | Description
---------- | ------- | -----------
-*`name` | string | Nombre del Lead
-*`first_lastname` | string | Primer apellido del Lead
-*`second_lastname` | string | Segundo apellido del Lead
-*`email` | string | Correo electrónico del Lead
-*`phone` | string | Teléfono del Lead
-
-> Si la petición se hace correctamente, el servidor devolverá un código 200 y una respuesta en JSON.
+> If the request is successful, the server will return a 201 status code and a JSON response.
 
 ```json
 {
@@ -174,36 +154,59 @@ Values | Type | Description
 	"success": true
 }
 ```
+
+This endpoint returns a 201 code when a new lead is created.
+
+### HTTP Request
+
+`POST https://api.app.curadeuda.com/api/users`
+
+### JSON Values User
+
+Values | Type | Description
+--------- | ------- | -----------
+*`name` | string | Lead name
+*`first_lastname` | string | Lead first lastname
+*`second_lastname` | string | Lead Second lastname
+*`email` | string | Lead email
+*`phone` | string | Lead phone number
+`rfc` | string | Lead RFC
+`dateOfBirth` | string | Lead date of birth
+`city` | string | Lead city
+`street` | string | Lead street
+`cp` | string | Lead postal code
+`suburb` | string | Lead suburb
+
 ### JSON Values Tags
 
 Values | Type | Description
 --------- | ------- | -----------
-*`qb_fuente` | integer | ID de la fuente de Lead
-*`qb_campaign` | integer | ID de la campaña de Lead
-`cid` | string | CID si existe
-`glid` | string | GLID si existe
-`source` | string | Fuente de Lead
-`campaign` | string | Campaña de Lead
-`medium` | string | Medio de Lead
-`adgroud` | string | Grupo de Adwords
-`adgroup` | string | Grupo de Adwords
-`matchtype` | string | Tipo de Match
-`network` | string | Red de Lead
-`device` | string | Dispositivo de Lead
-`keyword` | string | Palabra clave de Lead
-`placement` | string | Posición de Lead
-`target` | string | Target de Lead
-`adpositiion` | string | Posición de Adwords
-`ip` | string | IP de Lead
-`fbclid` | string | ID de Lead de Facebook
-`param_1` | string | Parametro 1 de Lead
-`param_2` | string | Parametro 2 de Lead
-`param_3` | string | Parametro 3 de Lead
-`param_4` | string | Parametro 4 de Lead
-`param_5` | string | Parametro 5 de Lead
+*`qb_fuente` | integer | ID Source
+*`qb_campaign` | integer | ID Campaign
+`cid` | string | CID if exists
+`glid` | string | GLID if exists
+`source` | string | Source
+`campaign` | string | Campaign
+`medium` | string | Medium
+`adgroud` | string | Adwords Group
+`adgroup` | string | Adwords Group
+`matchtype` | string | Matchtype
+`network` | string | Network
+`device` | string | Device
+`keyword` | string | Keyword
+`placement` | string | Placement
+`target` | string | Target
+`adpositiion` | string | Adwords Position
+`ip` | string | IP
+`fbclid` | string | Facebook Lead ID
+`param_1` | string | Parameter for extra data
+`param_2` | string | Parameter for extra data
+`param_3` | string | Parameter for extra data
+`param_4` | string | Parameter for extra data
+`param_5` | string | Parameter for extra data
 
 <aside class="success">
-Recuerda que los campos con * son obligatorios.
+All values with * are required.
 </aside>
 
 
